@@ -1,0 +1,90 @@
+<div class="container" [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }">
+<!-- Botão para alternar tema -->
+<button class="theme-toggle-button" (click)="toggleTheme()" aria-label="Alternar tema">
+  <i [class]="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+</button>
+
+<!-- Botão para abrir ou fechar a sidebar -->
+<button class="sidebar-toggle-button" (click)="toggleSidebar()" aria-label="Alternar sidebar">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Sidebar -->
+<nav class="sidebar" [ngClass]="{ 'collapsed': !isSidebarOpen }">
+  <ul class="menu">
+    <li>
+      <a routerLink="/dashboard">
+        <i class="fas fa-home"></i>
+        <span class="menu-text">Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/settings">
+        <i class="fas fa-cog"></i>
+        <span class="menu-text">Configurações</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/help">
+        <i class="fas fa-question-circle"></i>
+        <span class="menu-text">Ajuda</span>
+      </a>
+    </li>
+  </ul>
+  <button class="sidebar-toggle-button" (click)="toggleSidebar()">
+    <i class="fas fa-chevron-left" *ngIf="isSidebarOpen"></i>
+    <i class="fas fa-chevron-right" *ngIf="!isSidebarOpen"></i>
+  </button>
+
+  <button class="logout-button" (click)="logout()">
+    <i class="fas fa-sign-out-alt"></i>
+  </button>
+</nav>
+
+<!-- Conteúdo principal -->
+<main class="content" [ngStyle]="{'margin-left': isSidebarOpen ? '250px' : '80px'}">
+  <h1>Bem-vindo ao Hub</h1>
+
+  <!-- Formulário de busca -->
+  <form class="form">
+    <input type="text" placeholder="Digite o código" [(ngModel)]="newCode" name="code" required />
+    <button type="button" (click)="searchProduct()">Buscar</button>
+  </form>
+
+  <!-- Exibição das informações do produto -->
+  <div *ngIf="productInfo" class="product-details">
+    <h2>{{ productInfo.Descricao }}</h2>
+    <img [src]="productInfo.Imagem" alt="Imagem do produto" />
+    <p>Preço Público: {{ productInfo.PrecoPublico }}</p>
+  </div>
+
+  <!-- Formulário de adição -->
+  <form class="form">
+    <input type="text" placeholder="Digite o código" [(ngModel)]="newCode" name="code" required />
+    <input type="number" placeholder="Valor de Venda" [(ngModel)]="newSaleValue" name="saleValue" required />
+    <button type="submit" (click)="addRow()">Adicionar</button>
+  </form>
+
+  <!-- Tabela -->
+  <div class="table-container" *ngIf="rows.length > 0">
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of rows; let i = index">
+        <td>{{ row.code }}</td>
+        <td>{{ row.description }}</td>
+        <td>{{ row.saleValue }}</td>
+        <td>
+          <button class="remove-button" (click)="removeRow(i)">Remover</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
